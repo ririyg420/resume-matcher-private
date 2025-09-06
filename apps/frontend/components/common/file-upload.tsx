@@ -82,17 +82,11 @@ export default function FileUpload({ session }: { session: any }) {
 		},
 		onUploadError: (file, errorMsg) => {
 			console.error('Upload error:', file, errorMsg);
-			if (errorMsg?.includes('Unauthorized') || errorMsg?.includes('401')) {
-				setUploadFeedback({
-					type: 'error',
-					message: 'Du musst angemeldet sein, um Dateien hochzuladen. Erstelle ein kostenloses Konto oder melde dich an.',
-				});
-			} else {
-				setUploadFeedback({
-					type: 'error',
-					message: errorMsg || tErr('uploadUnknown'),
-				});
-			}
+			// Upload is now public, so no more authentication errors
+			setUploadFeedback({
+				type: 'error',
+				message: errorMsg || tErr('uploadUnknown'),
+			});
 		},
 		onFilesChange: (currentFiles) => {
 			if (currentFiles.length === 0) {

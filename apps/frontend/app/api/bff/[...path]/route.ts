@@ -139,8 +139,8 @@ async function proxyToBackend(req: NextRequest, params: { path: string[] } | und
 
 function requiresAuthentication(path: string, method: string): boolean {
   // List of endpoints that require authentication
+  // Note: Resume upload is now PUBLIC to allow anonymous uploads
   const protectedPaths = [
-    'api/v1/resumes/upload',
     'api/v1/resumes/improve', 
     'api/v1/jobs/upload',
     'api/v1/match'
@@ -149,9 +149,15 @@ function requiresAuthentication(path: string, method: string): boolean {
   console.log(`=== AUTH LOGIC CHECK ===`);
   console.log(`Path: ${path}, Method: ${method}`);
   
+  // Resume upload is now PUBLIC - anyone can upload without authentication
+  if (path.startsWith('api/v1/resumes/upload')) {
+    console.log(`Resume upload request - PUBLIC ACCESS ALLOWED`);
+    return false;
+  }
+  
   // GET requests to view resumes or jobs should be public
   if (method === 'GET' && (path.startsWith('api/v1/resumes') || path.startsWith('api/v1/jobs'))) {
-    // Only uploads, improvements and matches require auth
+    // Only improvements and matches require auth, viewing is public
     const needsAuth = protectedPaths.some(protectedPath => path.startsWith(protectedPath));
     console.log(`GET request to resumes/jobs - needs auth: ${needsAuth}`);
     return needsAuth;

@@ -35,12 +35,72 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className="h-full antialiased bg-gradient-to-br from-blue-950 via-zinc-900 to-purple-950 text-white font-sans">
-        {/* Dekorative Hintergrund-Elemente für den glasmorphischen Header */}
-        <div className="fixed -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/20 blur-3xl"></div>
-        <div className="fixed top-0 right-0 w-80 h-80 rounded-full bg-purple-600/20 blur-3xl"></div>
-        <div className="fixed -z-10 inset-0 bg-[url('/grid.svg')] bg-center opacity-5"></div>
-        {children}
+      <body className="min-h-screen antialiased text-white selection:bg-white/15 selection:text-white/95">
+        {/* Hero Gradient Background */}
+        <div className="fixed inset-0 hero overflow-hidden -z-10">
+          {/* Corner dark navy */}
+          <div className="layer anim" style={{
+            left:'-36vmin', 
+            bottom:'-30vmin', 
+            width:'108vmin', 
+            height:'108vmin',
+            background: 'radial-gradient(54% 54% at 50% 50%, var(--corner) 0%, transparent 76%)',
+            animation: 'pulseCorner 38s cubic-bezier(.22,.61,.36,1) infinite alternate'
+          }}></div>
+
+          {/* Main glow */}
+          <div className="layer mix-screen anim" style={{
+            left:'50%', 
+            top:'-20vmin', 
+            width:'144vmin', 
+            height:'144vmin',
+            background: `radial-gradient(50% 50% at 50% 50%,
+              var(--core-kernel) 0%,
+              var(--core-shoulder) 30%,
+              color-mix(in oklab, var(--core-shoulder), black 55%) 64%,
+              transparent 80%)`,
+            animation: 'breatheMain 28s cubic-bezier(.22,.61,.36,1) infinite alternate'
+          }}></div>
+
+          {/* Rim glow */}
+          <div className="layer mix-screen anim" style={{
+            right:'-18vmin', 
+            top:'-26vmin', 
+            width:'96vmin', 
+            height:'96vmin',
+            background: `radial-gradient(52% 52% at 50% 50%,
+              var(--rim) 0%,
+              var(--rim-outer) 58%,
+              transparent 80%)`,
+            animation: 'driftRim 34s linear infinite alternate'
+          }}></div>
+
+          {/* Glow Pulse in Zentrum */}
+          <div className="layer mix-screen anim" style={{
+            left:'50%', 
+            top:'50%', 
+            width:'70vmin', 
+            height:'70vmin', 
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle at 50% 50%, white 0%, transparent 60%)',
+            filter: 'blur(60px)',
+            opacity: 0,
+            animation: 'glowPulse 11s ease-in-out infinite'
+          }}></div>
+
+          {/* Depth rotation */}
+          <div className="depth anim" style={{
+            animation: 'orbitDepth 120s linear infinite'
+          }}></div>
+
+          <div className="vignette"></div>
+          <div className="grain"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
     </html>
   );
