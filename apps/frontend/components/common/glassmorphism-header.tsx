@@ -46,16 +46,11 @@ export function GlassmorphismHeader() {
                   {/* Logo image */}
                   <div className="relative z-10 w-full h-full flex items-center justify-center">
                     <img 
-                      src="/LOGO.png"
+                      src="/logo.png"
                       alt="Resume Matcher Logo"
                       width={32}
                       height={32}
                       className="object-contain transform group-hover:scale-110 transition-transform duration-300"
-                      onError={(e) => {
-                        // Fallback to SVG if PNG fails to load
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/logo.svg';
-                      }}
                     />
                   </div>
                 </div>
@@ -73,11 +68,6 @@ export function GlassmorphismHeader() {
                     width={120}
                     height={32}
                     className="object-contain relative z-10"
-                    onError={(e) => {
-                      // Fallback to SVG if PNG fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/wort_logo.svg';
-                    }}
                   />
                   {/* Text glow effect on hover */}
                   <div className="absolute -inset-1 bg-blue-500/10 filter blur-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
