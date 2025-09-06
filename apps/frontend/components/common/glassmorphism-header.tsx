@@ -6,7 +6,6 @@ import { LogoutButton } from '@/components/logout-button';
 import { LanguageDropdown } from '@/components/common/language-dropdown';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
 import { NeoGlassCard } from '@/components/ui/glass';
 
 export function GlassmorphismHeader() {
@@ -46,12 +45,17 @@ export function GlassmorphismHeader() {
                   
                   {/* Logo image */}
                   <div className="relative z-10 w-full h-full flex items-center justify-center">
-                    <Image 
+                    <img 
                       src="/LOGO.png"
                       alt="Resume Matcher Logo"
                       width={32}
                       height={32}
                       className="object-contain transform group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => {
+                        // Fallback to SVG if PNG fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/logo.svg';
+                      }}
                     />
                   </div>
                 </div>
@@ -63,12 +67,17 @@ export function GlassmorphismHeader() {
               {/* Brand name with text effects */}
               <div className="flex flex-col">
                 <div className="relative">
-                  <Image 
+                  <img 
                     src="/wort_logo.png"
                     alt="Resume Matcher"
                     width={120}
                     height={32}
                     className="object-contain relative z-10"
+                    onError={(e) => {
+                      // Fallback to SVG if PNG fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/wort_logo.svg';
+                    }}
                   />
                   {/* Text glow effect on hover */}
                   <div className="absolute -inset-1 bg-blue-500/10 filter blur-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
