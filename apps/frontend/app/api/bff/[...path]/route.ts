@@ -50,6 +50,13 @@ async function proxyToBackend(req: NextRequest, params: { path: string[] } | und
   const session = await auth();
   const isProtectedEndpoint = requiresAuthentication(joined, req.method);
   
+  // Add detailed logging for debugging
+  console.log(`=== AUTH CHECK ===`);
+  console.log(`Path: ${joined}`);
+  console.log(`Method: ${req.method}`);
+  console.log(`Is protected: ${isProtectedEndpoint}`);
+  console.log(`Has session: ${!!session?.user}`);
+  
   if (isProtectedEndpoint && !session?.user) {
     console.log(`Authentication required for ${req.method} ${joined} - no session found`);
     return NextResponse.json({ 
@@ -139,19 +146,27 @@ function requiresAuthentication(path: string, method: string): boolean {
     'api/v1/match'
   ];
 
+  console.log(`=== AUTH LOGIC CHECK ===`);
+  console.log(`Path: ${path}, Method: ${method}`);
+  
   // GET requests to view resumes or jobs should be public
   if (method === 'GET' && (path.startsWith('api/v1/resumes') || path.startsWith('api/v1/jobs'))) {
     // Only uploads, improvements and matches require auth
-    return protectedPaths.some(protectedPath => path.startsWith(protectedPath));
+    const needsAuth = protectedPaths.some(protectedPath => path.startsWith(protectedPath));
+    console.log(`GET request to resumes/jobs - needs auth: ${needsAuth}`);
+    return needsAuth;
   }
 
   // All non-GET requests to /api/v1/resumes and /api/v1/jobs require auth
   if (method !== 'GET' && (path.startsWith('api/v1/resumes') || path.startsWith('api/v1/jobs'))) {
+    console.log(`Non-GET request to resumes/jobs - needs auth: true`);
     return true;
   }
 
   // Check specific protected paths
-  return protectedPaths.some(protectedPath => path.startsWith(protectedPath));
+  const needsAuth = protectedPaths.some(protectedPath => path.startsWith(protectedPath));
+  console.log(`General path check - needs auth: ${needsAuth}`);
+  return needsAuth;
 }
 
 async function prepareBackendHeaders(req: NextRequest, session: any): Promise<Headers> {
