@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
 	AlertCircleIcon,
 	CheckCircle2Icon,
@@ -28,15 +28,18 @@ const API_RESUME_UPLOAD_URL = `/api/bff/api/v1/resumes/upload`;
 export default function FileUpload({ session }: { session: any }) {
 	const tUpload = useTranslations('Upload');
 	const tErr = useTranslations('Errors');
+	const locale = useLocale();
 	const maxSize = 2 * 1024 * 1024; // 2MB
 	const pathname = usePathname();
 	const parts = pathname.split('/').filter(Boolean);
-	const locale = parts[0] || 'en';
+	const currentLocale = parts[0] || 'en';
 
 	const [uploadFeedback, setUploadFeedback] = useState<{
 		type: 'success' | 'error';
 		message: string;
 	} | null>(null);
+	
+	const [uploadedResumeId, setUploadedResumeId] = useState<string | null>(null);
 
 		const [
 		{ files, isDragging, errors: validationOrUploadErrors, isUploadingGlobal },
@@ -68,14 +71,14 @@ export default function FileUpload({ session }: { session: any }) {
 				return
 			}
 
+			// Store resume ID and show success message with options
+			setUploadedResumeId(resumeId);
 			setUploadFeedback({
 				type: 'success',
-				message: `${(uploadedFile.file as FileMetadata).name} uploaded successfully!`,
+				message: `${(uploadedFile.file as FileMetadata).name} wurde erfolgreich hochgeladen!`,
 			});
 			clearErrors();
-			const encodedResumeId = encodeURIComponent(resumeId);
 			try { localStorage.setItem('last_resume_id', resumeId); } catch {}
-			window.location.href = `/${locale}/resume/${encodedResumeId}`;
 		},
 		onUploadError: (file, errorMsg) => {
 			console.error('Upload error:', file, errorMsg);
@@ -243,6 +246,45 @@ export default function FileUpload({ session }: { session: any }) {
 							Error: {(currentFile.file as FileMetadata).uploadError}
 						</p>
 					)}
+				</div>
+			)}
+
+			{/* Success actions after upload */}
+			{uploadedResumeId && uploadFeedback?.type === 'success' && (
+				<div className="rounded-xl border border-green-500/50 bg-green-500/10 p-4 text-sm text-green-600">
+					<div className="space-y-4">
+						<div className="flex items-start gap-2">
+							<CheckCircle2Icon className="mt-0.5 size-5 shrink-0" />
+							<div>
+								<p className="font-semibold">Upload erfolgreich!</p>
+								<p>{uploadFeedback.message}</p>
+							</div>
+						</div>
+						
+						<div className="flex flex-wrap gap-3">
+							<Link 
+								href={`/${locale}/resume/${encodeURIComponent(uploadedResumeId)}`}
+								className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+							>
+								📋 Lebenslauf ansehen
+							</Link>
+							
+							<Link 
+								href={`/${locale}/resume`}
+								className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors"
+								onClick={() => {
+									setUploadedResumeId(null);
+									setUploadFeedback(null);
+								}}
+							>
+								🔄 Neuen Lebenslauf hochladen
+							</Link>
+						</div>
+						
+						<div className="text-xs text-gray-500 bg-gray-100 rounded p-2">
+							💡 <strong>Tipp:</strong> Du kannst deinen Lebenslauf jederzeit ansehen. Für eine Job-Analyse mit KI musst du dich kostenlos anmelden.
+						</div>
+					</div>
 				</div>
 			)}
 		</div>
