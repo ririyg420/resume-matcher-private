@@ -82,7 +82,7 @@ export default function FileUpload({ session }: { session: any }) {
 			if (errorMsg?.includes('Unauthorized') || errorMsg?.includes('401')) {
 				setUploadFeedback({
 					type: 'error',
-					message: 'Du musst angemeldet sein, um Dateien hochzuladen.',
+					message: 'Du musst angemeldet sein, um Dateien hochzuladen. Erstelle ein kostenloses Konto oder melde dich an.',
 				});
 			} else {
 				setUploadFeedback({

@@ -56,12 +56,12 @@ export function LanguageDropdown() {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-10" 
+            className="fixed inset-0 z-[55]" 
             onClick={() => setIsOpen(false)}
           />
           
           {/* Menu */}
-          <div className="absolute right-0 top-full mt-2 w-40 rounded-lg bg-zinc-900/95 backdrop-blur-xl border border-white/10 shadow-2xl z-20 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-40 rounded-lg bg-zinc-900/95 backdrop-blur-xl border border-white/10 shadow-2xl z-[60] overflow-hidden">
             {languages.map((language) => (
               <button
                 key={language.code}
