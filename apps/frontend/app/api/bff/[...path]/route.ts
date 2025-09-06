@@ -139,6 +139,12 @@ function requiresAuthentication(path: string, method: string): boolean {
     'api/v1/match'
   ];
 
+  // GET requests to view resumes or jobs should be public
+  if (method === 'GET' && (path.startsWith('api/v1/resumes') || path.startsWith('api/v1/jobs'))) {
+    // Only uploads, improvements and matches require auth
+    return protectedPaths.some(protectedPath => path.startsWith(protectedPath));
+  }
+
   // All non-GET requests to /api/v1/resumes and /api/v1/jobs require auth
   if (method !== 'GET' && (path.startsWith('api/v1/resumes') || path.startsWith('api/v1/jobs'))) {
     return true;
