@@ -1,0 +1,18 @@
+Deployment Timestamp: 2025-09-06T11:30:00Z
+
+This file is used to trigger a fresh deployment to Vercel.
+
+Changes in this deployment:
+- Fixed upload success flow with action buttons
+- Removed automatic redirect after resume upload
+- Users can now choose to view resume or upload another
+- Authentication only required for job analysis features
+- Resume viewing is completely public
+
+Authentication flow fixed:
+✅ Upload resume (no auth required)
+✅ See success message with action buttons  
+✅ Click "📋 Lebenslauf ansehen" to view resume (no auth required)
+✅ Only job matching/improvement requires authentication
+
+The login requirement after upload should now be completely resolved.
